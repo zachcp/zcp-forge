@@ -1,10 +1,10 @@
 package:
   name: cdk-cli
-  version: "0.0.3"
+  version: "0.0.4"
 
 source:
-  url: https://github.com/zachcp/cdk-cli/releases/download/v0.0.3/cdkcli-0.1.0-SNAPSHOT.jar
-  sha256: 1ea2ab4f905ed0ed23db06510ef26d35df34d4c1c9340f3bcaf238bb5cb51d28
+  url: https://github.com/zachcp/cdk-cli/releases/download/v${version}/cdkcli-${version}.jar
+  sha256: 844bd930bc259e74b116e2cec1887886ab2b159f7508889aae903ea9834a55e0
 
 build:
   script:
