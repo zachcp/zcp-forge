@@ -3,8 +3,8 @@ package:
   version: "0.0.4"
 
 source:
-  url: https://github.com/zachcp/cdk-cli/releases/download/v${{ version }}/cdkcli-${{ version }}.jar
-  sha256: 844bd930bc259e74b116e2cec1887886ab2b159f7508889aae903ea9834a55e0
+  url: https://github.com/zachcp/cdk-cli/releases/download/v0.0.4/cdkcli-0.0.4.jar
+  sha256: 86e4a9206c90481d9d7005a4ae3f804fc0b3f111a6547051e939c42b4020bd0b
 
 build:
   script:
