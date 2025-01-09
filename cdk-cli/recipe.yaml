@@ -1,0 +1,35 @@
+package:
+  name: cdk-cli
+  version: "0.0.3"
+
+source:
+  url: https://github.com/zachcp/cdk-cli/releases/download/v0.0.3/cdkcli-0.1.0-SNAPSHOT.jar
+  sha256: 1ea2ab4f905ed0ed23db06510ef26d35df34d4c1c9340f3bcaf238bb5cb51d28
+
+build:
+  script:
+    - if: unix
+      then:
+        - TGT="$PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM"
+        - mkdir -p "$TGT"
+        - mkdir -p $PREFIX/bin
+        - cp $RECIPE_DIR/cdkcli.sh $TGT/cdk-cli
+        - ln -s $TGT//cdk-cli $PREFIX/bin
+        - cp -p "$SRC_DIR"/*.jar "$TGT"
+        - chmod 0755 "${PREFIX}/bin/cdk-cli"
+
+requirements:
+  run:
+    - openjdk >=17
+
+tests:
+  - script:
+      - cdk-cli --help
+
+about:
+  homepage: https://github.com/zachcp/cdk-cli
+  summary: CLI Utilities for the Chemistry Development kit
+  description: |-
+    CLI Utilities for the Chemistry Development kit
+  license: MIT
+  repository: https://github.com/zachcp/cdk-cli
