@@ -1,10 +1,13 @@
+context:
+  version: "0.0.5"
+
 package:
   name: cdk-cli
-  version: "0.0.4"
+  version: ${{ version }}
 
 source:
-  url: https://github.com/zachcp/cdk-cli/releases/download/v0.0.4/cdkcli-0.0.4.jar
-  sha256: 86e4a9206c90481d9d7005a4ae3f804fc0b3f111a6547051e939c42b4020bd0b
+  url: https://github.com/zachcp/cdk-cli/releases/download/v${{ version }}/cdkcli-${{ version }}.jar
+  sha256: dbb6f8c9063b50fc473ae40ec02ce9c715a746a179534825e6c967de91d9b568
 
 build:
   script:
