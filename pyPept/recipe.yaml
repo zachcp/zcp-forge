@@ -25,7 +25,7 @@ requirements:
 tests:
   - python:
       imports:
-        - pypept
+        - pyPept
 
 about:
   homepage: https://github.com/Boehringer-Ingelheim/pyPept
