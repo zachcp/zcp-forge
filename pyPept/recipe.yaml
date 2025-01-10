@@ -25,7 +25,7 @@ requirements:
 
 tests:
   - script:
-      - run_pyPept --help
+      - run_pyPept.py --help
 
 about:
   homepage: https://github.com/Boehringer-Ingelheim/pyPept
