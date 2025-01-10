@@ -1,0 +1,36 @@
+package:
+  name: pypept
+  version: "1.0"
+
+source:
+  url: https://github.com/Boehringer-Ingelheim/pyPept/archive/ade9f5840691ad1f8fa22d13939a665c25175d5a.zip
+  sha256: fde0bdfbd7399b3564d59760a98402230cd843d75519b574e15b9d58fc9834eb
+
+build:
+  noarch: python
+  script:
+    - pip install . -v
+
+requirements:
+  host:
+    - pip
+    - python >=3.9
+    - rdkit
+    - setuptools
+    - wheel
+  run:
+    - biopython >=1.79
+    - rdkit
+    - pandas
+
+tests:
+  - script:
+      - run_pyPept --help
+
+about:
+  homepage: https://github.com/Boehringer-Ingelheim/pyPept
+  summary: Peptides Using the BILN Line Notation
+  description: |-
+    Peptides Using the BILN Line Notation
+  license: MIT
+  repository: https://github.com/Boehringer-Ingelheim/pyPept
