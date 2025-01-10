@@ -1,5 +1,5 @@
 #!/bin/bash
-# Picard executable shell script
+# cdk-cli
 set -eu -o pipefail
 
 export LC_ALL=en_US.UTF-8
