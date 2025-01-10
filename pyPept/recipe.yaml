@@ -23,8 +23,9 @@ requirements:
     - pandas
 
 tests:
-  - script:
-      - pyPept --help
+  - python:
+      imports:
+        - pypept
 
 about:
   homepage: https://github.com/Boehringer-Ingelheim/pyPept
