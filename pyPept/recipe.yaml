@@ -8,14 +8,14 @@ source:
 
 build:
   noarch: python
-  script: |
+  script:
     - pip install . -v
     - TGT="$PREFIX/share/$PKG_NAME-$PKG_VERSION-$PKG_BUILDNUM"
-      - mkdir -p "$TGT"
-      - mkdir -p $PREFIX/bin
-      - cp $RECIPE_DIR/run_pyPept.py $TGT/run_pyPept.py
-      - ln -s $TGT/run_pyPept.py $PREFIX/bin
-      - chmod 0755 "${PREFIX}/bin/run_pyPept.py"
+    - mkdir -p "$TGT"
+    - mkdir -p $PREFIX/bin
+    - cp $RECIPE_DIR/run_pyPept.py $TGT/run_pyPept.py
+    - ln -s $TGT/run_pyPept.py $PREFIX/bin
+    - chmod 0755 "${PREFIX}/bin/run_pyPept.py"
 
 requirements:
   host:
