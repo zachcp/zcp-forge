@@ -21,8 +21,9 @@ requirements:
     - torchmetrics
 
 tests:
-  - script:
-      - run_pyPept --help
+  - python:
+      imports:
+        - openfold
 
 about:
   homepage: https://github.com/microsoft/protein-frame-flow
