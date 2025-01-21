@@ -1,0 +1,34 @@
+package:
+  name: protein-frame-flow
+  version: "1.0"
+
+source:
+  url: https://github.com/microsoft/protein-frame-flow/archive/f50d8dbbdae827be291e9f73d732b61b195f8816.zip
+  sha256: 9ce3231aec96100bbbe7f708821dc8d6b5159fbb1bdd02d881e1bad1a915a037
+
+build:
+  script:
+    - pip install . -v
+
+requirements:
+  host:
+    - pip
+    - python >=3.10
+    - setuptools
+    - wheel
+  run:
+    - pytorch
+    - torchmetrics
+
+tests:
+  - python:
+      imports:
+        - openfold
+
+about:
+  homepage: https://github.com/microsoft/protein-frame-flow
+  summary: Fast protein backbone generation with SE(3) flow matching.
+  description: |
+    Fast protein backbone generation with SE(3) flow matching.
+  license: MIT
+  repository: https://github.com/microsoft/protein-frame-flow
