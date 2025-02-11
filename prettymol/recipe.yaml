@@ -1,0 +1,34 @@
+package:
+  name: prettymol
+  version: "0.1"
+
+source:
+  url: https://github.com/zachcp/prettymol/archive/refs/tags/v0.1.zip
+  sha256: bba7ef1e13384bef3d96646c181b0210538aeead85fc8615b71bce2528e32bbb
+
+build:
+  script:
+    - pip install . -v
+
+requirements:
+  host:
+    - pip
+    - python ==3.11
+    - setuptools
+    - wheel
+  run:
+    - biotite
+    - molecularnodes
+
+tests:
+  - python:
+      imports:
+        - prettymol
+
+about:
+  homepage: https://zachcp.github.io/prettymol/
+  summary: Make molecules. pretty.
+  description: |
+    Molecules drawn bia Blender and Molecular Nodes
+  license: MIT
+  repository: https://github.com/zachcp/prettymol/
