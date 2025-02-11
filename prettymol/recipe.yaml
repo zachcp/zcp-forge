@@ -14,11 +14,11 @@ requirements:
   host:
     - pip
     - python ==3.11
+    - hatchling
     - setuptools
     - wheel
   run:
     - biotite
-    - molecularnodes
 
 tests:
   - python:
