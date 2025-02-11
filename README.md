@@ -1,5 +1,9 @@
 # zcp-forge
 
+## Setup
+
+Recipes here are autobuilt to a pixi channel: [https://repo.prefix.dev/zcp-forge](https://repo.prefix.dev/zcp-forge).
+
 
 ## Use Packages
 
