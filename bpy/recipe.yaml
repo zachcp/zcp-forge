@@ -25,14 +25,16 @@ build:
   script: pip install --no-deps *.whl
 
 requirements:
-  build:
-    - python =3.11
-    - pip
   host:
     - python =3.11
     - pip
+    - wheel
   run:
     - python =3.11
+    - cython
+    - numpy <2.0
+    - requests
+    - zstd
 
 tests:
   - python:
