@@ -24,4 +24,7 @@ cdk-cli depict \
 
 ```sh
 cd cdk-cli && rattler-build build
+
+
+rattler-build build  -c conda-forge -c https://repo.prefix.dev/zcp-forge
 ```
