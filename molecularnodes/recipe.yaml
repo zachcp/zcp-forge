@@ -1,0 +1,40 @@
+context:
+  version: 4.2.12
+
+package:
+  name: molecularnodes
+  version: ${{ version }}
+
+source:
+  - url: https://pypi.org/packages/source/m/molecularnodes/molecularnodes-${{ version }}.tar.gz
+    sha256: aa1cd111d7bad41140b15bc225d6ab8fbf09ca8e63c40fcd9028d925bb9b23f6
+
+build:
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps
+  number: 0
+
+requirements:
+  host:
+    - python =3.11
+    - pip
+  run:
+    - python =3.11
+    - databpy
+    - mdanalysis >=2.7.0
+    - biotite >=1.1
+    - mrcfile
+    - starfile
+    - bpy >=4.2
+
+tests:
+  - python:
+      imports:
+        - molecularnodes
+      pip_check: false # note there is a hatchling-cython error that shows up here
+
+about:
+  summary: Toolbox for molecular animations with Blender and Geometry Nodes.
+  description: |
+    Blender module for excellent drawing of molecules.
+  documentation: https://bradyajohnston.github.io/MolecularNodes
