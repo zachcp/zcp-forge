@@ -3,11 +3,11 @@ package:
   version: "4.3.0"
 
 source:
-  - if: win64
+  - if: win and x86_64
     then:
       url: "https://files.pythonhosted.org/packages/7f/da/c255b626cab58c69c49f4a65d0410b36aa1086dc63862d1c3de653f0a5a0/bpy-4.3.0-cp311-cp311-win_amd64.whl"
       sha256: 1a7b2c516aa7a95c31fcaae8842addd07fa86c1ce4768e88a34b480d17e2e93a
-  - if: linux64
+  - if: linux and x86_64
     then:
       url: "https://files.pythonhosted.org/packages/9c/4d/897bf3c247d7c6a4e75397f4c5dd5d201fb147981d2271ac35ac955959ab/bpy-4.3.0-cp311-cp311-manylinux_2_28_x86_64.whl"
       sha256: 1620199392a7e7aab58672aa47c50b3c5b1e4d39d46af5a7f9bbe2af561ea942
@@ -21,8 +21,15 @@ source:
       sha256: 82c3486e9762e8cfce4bbc1d6752f5625da8515f6b217e02810350627d693897
 
 build:
-  number: 0
-  script: pip install --no-deps *.whl -v
+  number: 1
+  script: |
+    pip install --no-deps *.whl
+    python -c "
+    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'r') as f:
+        content = f.read()
+    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'w') as f:
+        f.write(content.replace('cp39', 'cp311'))
+    "
 
 requirements:
   host:
@@ -42,7 +49,6 @@ tests:
   - python:
       imports:
         - bpy
-      pip_check: false
 
 about:
   homepage: https://pypi.org/project/bpy/
