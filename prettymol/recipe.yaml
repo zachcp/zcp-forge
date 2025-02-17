@@ -1,14 +1,18 @@
-package:
+context:
   name: prettymol
-  version: "0.1"
+  version: 0.2
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
 
 source:
-  url: https://github.com/zachcp/prettymol/archive/refs/tags/v0.1.zip
-  sha256: bba7ef1e13384bef3d96646c181b0210538aeead85fc8615b71bce2528e32bbb
+  url: https://pypi.org/packages/source/${{ name }}/${{ name }}/prettymol-${{ version }}.tar.gz
+  sha256: 5e5e98380795297b4945575fde1c928e0e29b07667dec24b9435736534697036
 
 build:
   script:
-    - pip install . -v
+    - pip install . -v --no-deps
 
 requirements:
   host:
@@ -19,6 +23,7 @@ requirements:
     - wheel
   run:
     - biotite
+    - bpy
 
 tests:
   - python:
