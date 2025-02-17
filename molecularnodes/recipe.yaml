@@ -11,13 +11,10 @@ source:
 
 build:
   noarch: python
-  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps
   number: 0
 
 requirements:
-  build:
-    - python =3.11
-    - pip
   host:
     - python =3.11
     - pip
@@ -34,7 +31,7 @@ tests:
   - python:
       imports:
         - molecularnodes
-      pip_check: true
+      pip_check: false # note there is a hatchling-cython error that shows up here
 
 about:
   summary: Toolbox for molecular animations with Blender and Geometry Nodes.
