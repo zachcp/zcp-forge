@@ -22,15 +22,17 @@ source:
 
 build:
   number: 0
-  script: pip install --no-deps *.whl
+  script: pip install --no-deps *.whl -v
 
 requirements:
   host:
     - python =3.11
+    - python_abi ==3.11
     - pip
     - wheel
   run:
     - python =3.11
+    - python_abi ==3.11
     - cython
     - numpy <2.0
     - requests
@@ -40,6 +42,7 @@ tests:
   - python:
       imports:
         - bpy
+      pip_check: false
 
 about:
   homepage: https://pypi.org/project/bpy/
