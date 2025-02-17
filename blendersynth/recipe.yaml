@@ -1,0 +1,44 @@
+context:
+  name: blendersynth
+  version: 0.3.0
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.io/packages/source/b/blendersynth/blendersynth-${{ version }}.tar.gz
+  sha256: 0bd89663b97b2a78e735fa7a1be2e21481c2220253069cea8964fc379b41a8d9
+
+build:
+  noarch: python
+  script:
+    - pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python
+    - setuptools >=42
+    - wheel
+    - platformdirs >=3.11.0
+    - numpy
+    - tqdm
+    - ffmpeg-python
+    - pip
+  run:
+    - python
+    - platformdirs >=3.11.0
+    - numpy
+    - tqdm
+    - ffmpeg-python
+
+tests:
+  - python:
+      imports:
+        - blendersynth
+      pip_check: true
+about:
+  summary: Synthetic Rendering for Blender
+  license: MIT
+  license_file: LICENSE
