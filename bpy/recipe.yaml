@@ -22,7 +22,14 @@ source:
 
 build:
   number: 0
-  script: pip install --no-deps *.whl -v
+  script: |
+    pip install --no-deps *.whl -v
+    python -c "
+    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'r') as f:
+        content = f.read()
+    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'w') as f:
+        f.write(content.replace('cp39', 'cp311'))
+    "
 
 requirements:
   host:
