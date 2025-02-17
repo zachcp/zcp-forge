@@ -49,7 +49,6 @@ tests:
   - python:
       imports:
         - bpy
-      pip_check: false
 
 about:
   homepage: https://pypi.org/project/bpy/
