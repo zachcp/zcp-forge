@@ -3,7 +3,7 @@ package:
   version: "4.3.0"
 
 source:
-  - if: win64
+  - if: win and x86_64
     then:
       url: "https://files.pythonhosted.org/packages/7f/da/c255b626cab58c69c49f4a65d0410b36aa1086dc63862d1c3de653f0a5a0/bpy-4.3.0-cp311-cp311-win_amd64.whl"
       sha256: 1a7b2c516aa7a95c31fcaae8842addd07fa86c1ce4768e88a34b480d17e2e93a
