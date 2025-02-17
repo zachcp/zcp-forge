@@ -21,9 +21,9 @@ source:
       sha256: 82c3486e9762e8cfce4bbc1d6752f5625da8515f6b217e02810350627d693897
 
 build:
-  number: 0
+  number: 1
   script: |
-    pip install --no-deps *.whl -v
+    pip install --no-deps *.whl
     python -c "
     with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'r') as f:
         content = f.read()
