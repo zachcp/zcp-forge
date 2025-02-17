@@ -22,16 +22,12 @@ requirements:
   run:
     - python =3.11
     - bpy
-    - cython
     - numpy <2
-    - requests
-    - zstd
 
 tests:
   - python:
       imports:
         - databpy
-        - bpy
       pip_check: true
 
 about:
