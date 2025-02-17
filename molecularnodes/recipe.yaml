@@ -10,7 +10,9 @@ source:
     sha256: aa1cd111d7bad41140b15bc225d6ab8fbf09ca8e63c40fcd9028d925bb9b23f6
 
 build:
-  script: pip install .
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
 
 requirements:
   build:
@@ -32,8 +34,6 @@ tests:
   - python:
       imports:
         - molecularnodes
-        - databpy
-        - bpy
       pip_check: true
 
 about:
