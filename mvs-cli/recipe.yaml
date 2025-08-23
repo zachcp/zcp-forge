@@ -11,13 +11,18 @@ source:
 
 build:
   script: |
-    deno install --allow-scripts=npm:@scarf/scarf@1.4.0
-
     # Create bin directory
     mkdir -p $PREFIX/bin
 
-    # Compile to standalone executable
-    deno compile --allow-read --allow-write --allow-env --allow-net --allow-scripts --config deno.json --output $PREFIX/bin/mvs main.ts
+    # Compile to standalone executable with all required permissions
+    deno compile \
+      --allow-read \
+      --allow-write \
+      --allow-env \
+      --allow-net \
+      --allow-run \
+      --output $PREFIX/bin/mvs \
+      main.ts
 
     # Ensure the binary is executable
     chmod +x $PREFIX/bin/mvs
