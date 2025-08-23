@@ -10,12 +10,8 @@ source:
     rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
 
 build:
-  noarch: generic
   script: |
     deno install --allow-scripts=npm:@scarf/scarf@1.4.0
-
-    # Build the project
-    deno task build
 
     # Create bin directory
     mkdir -p $PREFIX/bin
@@ -25,7 +21,7 @@ build:
 
     # Ensure the binary is executable
     chmod +x $PREFIX/bin/mvs
-  number: 0
+  number: 1
 
 requirements:
   build:
