@@ -5,24 +5,18 @@ package:
   name: mvs-cli
   version: ${{ version }}
 
+platforms:
+  - osx-64
+  - osx-arm64
+
 source:
   - git: https://github.com/zachcp/mvs-cli.git
     rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
 
 build:
   script: |
-    # Install latest Deno
-    if [[ "$target_platform" == "win-64" ]]; then
-      # For Windows, use zip download method
-      DENO_VERSION="2.1.4"
-      curl -fsSL "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-pc-windows-msvc.zip" -o deno.zip
-      unzip deno.zip
-      mkdir -p "$HOME/.deno/bin"
-      mv deno.exe "$HOME/.deno/bin/"
-    else
-      # For Unix-like systems (Linux and macOS)
-      curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
-    fi
+    # Install latest Deno for macOS
+    curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
 
     # Add Deno to PATH
     export PATH="$HOME/.deno/bin:$PATH"
@@ -43,16 +37,13 @@ build:
       --output $PREFIX/bin/mvs \
       main.ts
 
-    # Ensure the binary is executable (Unix-like systems only)
-    if [[ "$target_platform" != "win-64" ]]; then
-      chmod +x $PREFIX/bin/mvs
-    fi
+    # Ensure the binary is executable
+    chmod +x $PREFIX/bin/mvs
   number: 1
 
 requirements:
   build:
     - curl # For downloading Deno
-    - unzip # For Windows Deno installation
   run: []
 
 tests:
