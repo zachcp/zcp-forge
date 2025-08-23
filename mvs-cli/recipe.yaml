@@ -1,0 +1,52 @@
+context:
+  version: 0.1.0
+
+package:
+  name: mvs-cli
+  version: ${{ version }}
+
+source:
+  - git: https://github.com/zachcp/mvs-cli.git
+    rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
+
+build:
+  noarch: generic
+  script: |
+    deno install --allow-scripts=npm:@scarf/scarf@1.4.0
+
+    # Build the project
+    deno task build
+
+    # Create bin directory
+    mkdir -p $PREFIX/bin
+
+    # Compile to standalone executable
+    deno compile --allow-read --allow-write --allow-env --allow-net --allow-scripts --config deno.json --output $PREFIX/bin/mvs main.ts
+
+    # Ensure the binary is executable
+    chmod +x $PREFIX/bin/mvs
+  number: 0
+
+requirements:
+  build:
+    - deno >=1.40.0
+  run: []
+
+tests:
+  - script:
+      - mvs --help
+      - mvs --version
+
+about:
+  summary: A Deno-backed CLI tool for molecular visualization
+  description: |
+    MVS CLI is a command-line interface built with Deno for molecular
+    visualization and analysis tasks.
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/zachcp/mvs-cli
+  repository: https://github.com/zachcp/mvs-cli
+
+extra:
+  recipe-maintainers:
+    - zachcp
