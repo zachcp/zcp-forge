@@ -18,19 +18,19 @@ build:
       export PATH="$HOME/.deno/bin:$PATH"
     fi
 
+    deno install --allow-scripts=npm:@scarf/scarf@1.4.0
+
     # Build the project
     deno task build
 
     # Create bin directory
     mkdir -p $PREFIX/bin
 
-    # Install the CLI
-    deno install --global --allow-read --allow-write --allow-env --allow-net --allow-scripts --config deno.json -f -n mvs main.ts --root $PREFIX
+    # Compile to standalone executable
+    deno compile --allow-read --allow-write --allow-env --allow-net --allow-scripts --config deno.json --output $PREFIX/bin/mvs main.ts
 
-    # Ensure the binary is in the right location
-    if [ -f "$PREFIX/bin/mvs" ]; then
-      chmod +x $PREFIX/bin/mvs
-    fi
+    # Ensure the binary is executable
+    chmod +x $PREFIX/bin/mvs
   number: 0
 
 requirements:
