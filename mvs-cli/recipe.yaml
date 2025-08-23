@@ -30,8 +30,7 @@ build:
 requirements:
   build:
     - deno >=1.40.0
-  run:
-    - deno >=1.40.0
+  run: []
 
 tests:
   - script:
