@@ -12,12 +12,6 @@ source:
 build:
   noarch: generic
   script: |
-    # Install Deno if not available
-    if ! command -v deno &> /dev/null; then
-      curl -fsSL https://deno.land/install.sh | sh
-      export PATH="$HOME/.deno/bin:$PATH"
-    fi
-
     deno install --allow-scripts=npm:@scarf/scarf@1.4.0
 
     # Build the project
@@ -35,7 +29,7 @@ build:
 
 requirements:
   build:
-    - curl
+    - deno >=1.40.0
   run:
     - deno >=1.40.0
 
