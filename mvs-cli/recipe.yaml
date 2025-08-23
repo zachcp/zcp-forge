@@ -10,26 +10,37 @@ source:
     rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
 
 build:
-  noarch: generic
+  skip: true # [not osx]
   script: |
-    deno install --allow-scripts=npm:@scarf/scarf@1.4.0
+    # Install latest Deno for macOS
+    curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
 
-    # Build the project
-    deno task build
+    # Add Deno to PATH
+    export PATH="$HOME/.deno/bin:$PATH"
+
+    # Verify Deno installation
+    deno --version
 
     # Create bin directory
     mkdir -p $PREFIX/bin
 
-    # Compile to standalone executable
-    deno compile --allow-read --allow-write --allow-env --allow-net --allow-scripts --config deno.json --output $PREFIX/bin/mvs main.ts
+    # Compile to standalone executable with all required permissions
+    deno compile \
+      --allow-read \
+      --allow-write \
+      --allow-env \
+      --allow-net \
+      --allow-run \
+      --output $PREFIX/bin/mvs \
+      main.ts
 
     # Ensure the binary is executable
     chmod +x $PREFIX/bin/mvs
-  number: 0
+  number: 1
 
 requirements:
   build:
-    - deno >=1.40.0
+    - curl # For downloading Deno
   run: []
 
 tests:
