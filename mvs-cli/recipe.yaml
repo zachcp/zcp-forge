@@ -10,7 +10,6 @@ source:
     rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
 
 build:
-  skip: true # [not osx]
   script: |
     # Install latest Deno for macOS
     curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
