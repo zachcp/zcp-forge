@@ -11,6 +11,25 @@ source:
 
 build:
   script: |
+    # Install latest Deno
+    if [[ "$target_platform" == "win-64" ]]; then
+      # For Windows, use zip download method
+      DENO_VERSION="2.1.4"
+      curl -fsSL "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-pc-windows-msvc.zip" -o deno.zip
+      unzip deno.zip
+      mkdir -p "$HOME/.deno/bin"
+      mv deno.exe "$HOME/.deno/bin/"
+    else
+      # For Unix-like systems (Linux and macOS)
+      curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
+    fi
+
+    # Add Deno to PATH
+    export PATH="$HOME/.deno/bin:$PATH"
+
+    # Verify Deno installation
+    deno --version
+
     # Create bin directory
     mkdir -p $PREFIX/bin
 
@@ -24,13 +43,16 @@ build:
       --output $PREFIX/bin/mvs \
       main.ts
 
-    # Ensure the binary is executable
-    chmod +x $PREFIX/bin/mvs
+    # Ensure the binary is executable (Unix-like systems only)
+    if [[ "$target_platform" != "win-64" ]]; then
+      chmod +x $PREFIX/bin/mvs
+    fi
   number: 1
 
 requirements:
   build:
-    - deno >=1.40.0
+    - curl # For downloading Deno
+    - unzip # For Windows Deno installation
   run: []
 
 tests:
