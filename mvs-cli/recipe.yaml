@@ -1,5 +1,5 @@
 context:
-  version: 0.1.0
+  version: 0.1.1
 
 package:
   name: mvs-cli
@@ -7,9 +7,11 @@ package:
 
 source:
   - git: https://github.com/zachcp/mvs-cli.git
-    rev: d16ca69e5ac062a289f0a2b6604295eb7b151879
+    rev: 08ae9809258b12f0ec7e76ce2a43bccca9289860
 
 build:
+  dynamic_linking:
+    binary_relocation: false
   script: |
     # Install latest Deno for macOS
     curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
@@ -35,7 +37,7 @@ build:
 
     # Ensure the binary is executable
     chmod +x $PREFIX/bin/mvs
-  number: 1
+  number: 0
 
 requirements:
   build:
