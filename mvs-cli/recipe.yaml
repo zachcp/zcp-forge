@@ -10,6 +10,8 @@ source:
     rev: 08ae9809258b12f0ec7e76ce2a43bccca9289860
 
 build:
+  dynamic_linking:
+    binary_relocation: false
   script: |
     # Install latest Deno for macOS
     curl -fsSL https://deno.land/install.sh | sh -s -- --no-modify-path
