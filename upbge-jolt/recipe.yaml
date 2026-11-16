@@ -1,0 +1,83 @@
+context:
+  # jlt-commons/upbge-jolt has no tags; the version is the date of the pinned commit.
+  version: "0.0.20261112"
+  upbge_jolt_rev: f2ad345ad5f14c054988c509e9aecd4c2e919722
+  # UPBGE master (first parent) as of upbge-jolt's commit. integrate.sh patches
+  # this tree by exact text, so move both revisions together.
+  upbge_rev: c0b37ac95879561ffdd7a421ade075a8df56e550
+  # the jolt release upbge-jolt's own CI tests with
+  jolt_version: "0.8.25"
+  # the Chez Scheme jolt is built against (jolt's JOLT-CHEZ-FLOOR)
+  chez_version: "10.4.1"
+
+package:
+  name: upbge-jolt
+  version: ${{ version }}
+
+source:
+  - git: https://github.com/jlt-commons/upbge-jolt.git
+    rev: ${{ upbge_jolt_rev }}
+  - url: https://github.com/jolt-lang/jolt/releases/download/v${{ jolt_version }}/jolt-v${{ jolt_version }}-aarch64-macos.tar.gz
+    sha256: 7b07ae2db68df0f47abe928f02301f8e7915bc75a40d5ec3c8e6628de416b231
+    target_directory: _jolt
+  # `jolt build --library` compiles and links with a Chez Scheme install
+  # (the kernel files the prebuilt jolt carries only serve executables).
+  - url: https://github.com/cisco/ChezScheme/releases/download/v${{ chez_version }}/csv${{ chez_version }}.tar.gz
+    sha256: 2e74952db7bc177f0c3602e2217a341ba677d733eec4cd7726418c3a4e1ef308
+    target_directory: _chez
+
+build:
+  number: 0
+  # host/integrate.sh builds only for macOS (BSD sed, build_darwin, Metal
+  # fixes), and the jolt source above is the aarch64-macos binary.
+  skip:
+    - not (osx and arm64)
+  # Blender.app is self-contained (bundled dylibs, Python, rpaths relative to
+  # the bundle), so leave its binaries and signatures as built.
+  dynamic_linking:
+    binary_relocation: false
+  prefix_detection:
+    ignore: true
+  script:
+    file: build.sh
+    env:
+      UPBGE_REV: ${{ upbge_rev }}
+
+requirements:
+  # Blender is compiled with Xcode's clang against UPBGE's prebuilt
+  # lib/macos_arm64, as the upstream build does, not with conda compilers.
+  build:
+    - cmake
+    - git
+    - git-lfs
+    - make
+    - python >=3.11
+
+tests:
+  - files:
+      recipe:
+        - test_nrepl.py
+    requirements:
+      run:
+        - python >=3.11
+    script:
+      - test -f "$PREFIX/lib/upbge-jolt/libjolt_upbge.dylib"
+      - '"$PREFIX/lib/upbge-jolt/Blender.app/Contents/MacOS/Blender" --version'
+      - python test_nrepl.py
+
+about:
+  homepage: https://github.com/jlt-commons/upbge-jolt
+  repository: https://github.com/jlt-commons/upbge-jolt
+  license: GPL-2.0-or-later
+  license_file: LICENSE
+  summary: UPBGE/Blender with an embedded Jolt (Clojure) nREPL
+  description: |
+    UPBGE built from source with jlt-commons/upbge-jolt integrated: the C shim
+    and startup hook compiled into Blender and the standalone player, plus the
+    jolt runtime (libjolt_upbge.dylib). `upbge-jolt [editor|play|headless]`
+    starts Blender with an nREPL server and writes its port to .nrepl-port in
+    the current directory (override with UPBGE_JOLT_PORT_FILE).
+
+extra:
+  recipe-maintainers:
+    - zachcp
