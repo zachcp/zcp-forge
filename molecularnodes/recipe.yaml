@@ -1,5 +1,5 @@
 context:
-  version: 4.2.12
+  version: 520.2.0
 
 package:
   name: molecularnodes
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://pypi.org/packages/source/m/molecularnodes/molecularnodes-${{ version }}.tar.gz
-    sha256: aa1cd111d7bad41140b15bc225d6ab8fbf09ca8e63c40fcd9028d925bb9b23f6
+    sha256: 43f149e83254bbe575bae84d3615c28058af3ccf817067ec37207c494ad8f50f
 
 build:
   noarch: python
@@ -16,16 +16,21 @@ build:
 
 requirements:
   host:
-    - python =3.11
+    - python =3.13
     - pip
+    - setuptools >=61.0
   run:
-    - python =3.11
-    - databpy
-    - mdanalysis >=2.7.0
-    - biotite >=1.1
+    - python =3.13
+    - databpy >=0.9.0
+    - mdanalysis >=2.10
+    - biotite >=1.7.1
     - mrcfile
     - starfile
-    - bpy >=4.2
+    - imdclient >=0.2.3
+    - pandas <3.0.0
+    - griddataformats >=1.2.0
+    - nodebpy >=520.27.0,<520.32  # 520.32 dropped nodebpy.builder.arrange_tree
+    - bpy 5.2.*
 
 tests:
   - python:
