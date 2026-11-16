@@ -1,5 +1,5 @@
 context:
-  version: 0.0.9
+  version: 0.12.0
 
 package:
   name: databpy
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://pypi.org/packages/source/d/databpy/databpy-${{ version }}.tar.gz
-    sha256: 254e14dd3ca4b670b230dc4a1820d16062ed99ac01afb45c5a9d7981d39a5935
+    sha256: 00275ba0cc17082ea263fe243176b71763b0f4ee7e05e4152e5404de847334a3
 
 build:
   noarch: python
@@ -16,13 +16,13 @@ build:
 
 requirements:
   host:
-    - python =3.11
+    - python =3.13
     - pip
-    - bpy
+    - uv-build >=0.8.15,<0.9.0
   run:
-    - python =3.11
-    - bpy
-    - numpy <2
+    - python =3.13
+    - bpy >=5.1
+    - numpy
 
 tests:
   - python:
@@ -33,7 +33,6 @@ tests:
 about:
   summary: A data-oriented wrapper library for the Blender Python API
   license: GPL-3.0
-  license_file: LICENSE
 
 extra:
   recipe-maintainers:
