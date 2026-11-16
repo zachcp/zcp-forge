@@ -1,49 +1,44 @@
+context:
+  version: "5.2.4"
+
 package:
   name: bpy
-  version: "4.3.0"
+  version: ${{ version }}
 
 source:
   - if: win and x86_64
     then:
-      url: "https://files.pythonhosted.org/packages/7f/da/c255b626cab58c69c49f4a65d0410b36aa1086dc63862d1c3de653f0a5a0/bpy-4.3.0-cp311-cp311-win_amd64.whl"
-      sha256: 1a7b2c516aa7a95c31fcaae8842addd07fa86c1ce4768e88a34b480d17e2e93a
+      url: "https://files.pythonhosted.org/packages/83/bf/82e507d8325258222bf772030f02e95f267cd794fa25f395a9e26a37b56b/bpy-5.2.4-cp313-cp313-win_amd64.whl"
+      sha256: 08aa5f8c649eb099e700b093000eff86601c51a157f6bff3b73ca553f122236e
   - if: linux and x86_64
     then:
-      url: "https://files.pythonhosted.org/packages/9c/4d/897bf3c247d7c6a4e75397f4c5dd5d201fb147981d2271ac35ac955959ab/bpy-4.3.0-cp311-cp311-manylinux_2_28_x86_64.whl"
-      sha256: 1620199392a7e7aab58672aa47c50b3c5b1e4d39d46af5a7f9bbe2af561ea942
-  - if: osx and x86_64
-    then:
-      url: "https://files.pythonhosted.org/packages/81/39/4e763b150ff05412ab25d5eae91da7f0ade474b5d66509b39a67066d35ec/bpy-4.3.0-cp311-cp311-macosx_11_0_x86_64.whl"
-      sha256: 490aa94699664a99eee755047485a3ad70470fc6267c55a73459660f52299ade
+      url: "https://files.pythonhosted.org/packages/85/da/79a86492f2a3b1f08c40cbd5e3db5200f9ad7279cab44e5ba82cf398856a/bpy-5.2.4-cp313-cp313-manylinux_2_28_x86_64.whl"
+      sha256: 3d55d6123a1fe1735275067e23989acf511b6df9dfb4be236986aaaeb43bb332
   - if: osx and arm64
     then:
-      url: "https://files.pythonhosted.org/packages/c1/fc/5902fa508a13f4f1669bc2e2cd8f37adf1caeeed0a344f627c0ffc3bdc40/bpy-4.3.0-cp311-cp311-macosx_11_0_arm64.whl"
-      sha256: 82c3486e9762e8cfce4bbc1d6752f5625da8515f6b217e02810350627d693897
+      url: "https://files.pythonhosted.org/packages/a1/a9/169764de34048c13bc85740194fbf143b950d812b11fe682a3601e85a8a8/bpy-5.2.4-cp313-cp313-macosx_11_0_arm64.whl"
+      sha256: 41d961bfa066fb8a46db43a013e191b0b78a9d1018edb311d9101e00200e1ee5
 
 build:
-  number: 1
-  script: |
-    pip install --no-deps *.whl
-    python -c "
-    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'r') as f:
-        content = f.read()
-    with open('$PREFIX/lib/python3.11/site-packages/bpy-4.3.0.dist-info/WHEEL', 'w') as f:
-        f.write(content.replace('cp39', 'cp311'))
-    "
+  number: 0
+  skip:
+    - osx and x86_64
+  script: pip install --no-deps *.whl
 
 requirements:
   host:
-    - python =3.11
-    - python_abi ==3.11
+    - python =3.13
+    - python_abi ==3.13
     - pip
     - wheel
   run:
-    - python =3.11
-    - python_abi ==3.11
+    - python =3.13
+    - python_abi ==3.13
+    - cattrs
     - cython
-    - numpy <2.0
+    - numpy >=2.2,<3.0
     - requests
-    - zstd
+    - zstandard
 
 tests:
   - python:
