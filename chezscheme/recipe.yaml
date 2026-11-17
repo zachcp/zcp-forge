@@ -1,0 +1,53 @@
+context:
+  version: "10.4.1"
+
+package:
+  name: chezscheme
+  version: ${{ version }}
+
+source:
+  url: https://github.com/cisco/ChezScheme/releases/download/v${{ version }}/csv${{ version }}.tar.gz
+  sha256: 2e74952db7bc177f0c3602e2217a341ba677d733eec4cd7726418c3a4e1ef308
+
+build:
+  number: 0
+  skip:
+    - win
+  # Only the executables link conda libraries; the kernel objects under
+  # lib/csv* (main.o, libkernel.a) are link inputs and must stay untouched.
+  dynamic_linking:
+    binary_relocation:
+      - bin/*
+  script:
+    # Threaded, as jolt requires. Installs scheme/petite into bin and the
+    # kernel files jolt links against (scheme.h, libkernel.a, *.boot) into
+    # lib/csv<version>/<machine>, where `jolt build` looks for them.
+    - ./configure --threads --disable-x11 --installprefix="$PREFIX" --installman="$PREFIX/share/man" CC="$CC"
+    - make -j"$CPU_COUNT"
+    - make install
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - make
+    - if: linux
+      then: patchelf
+  host:
+    - ncurses
+
+tests:
+  - script:
+      - echo '(display (+ 1 2))' | scheme -q | grep -q 3
+      - test -f "$PREFIX"/lib/csv${{ version }}/*/scheme.h
+      - test -f "$PREFIX"/lib/csv${{ version }}/*/libkernel.a
+
+about:
+  homepage: https://cisco.github.io/ChezScheme/
+  repository: https://github.com/cisco/ChezScheme
+  license: Apache-2.0
+  license_file: LICENSE
+  summary: Chez Scheme, an implementation of the Scheme language (threaded build)
+
+extra:
+  recipe-maintainers:
+    - zachcp

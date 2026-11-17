@@ -6,22 +6,7 @@ set -euxo pipefail
 # Let Blender's CMake pick its own minimum macOS version.
 unset MACOSX_DEPLOYMENT_TARGET
 
-# jolt, from the release tarball in the sources
-JOLT_BIN="$(find "$SRC_DIR/_jolt" -maxdepth 2 -type f -name jolt | head -1)"
-chmod +x "$JOLT_BIN"
-export PATH="$(dirname "$JOLT_BIN"):$PATH"
 jolt --version
-
-# threaded Chez Scheme for `jolt build --library`
-CHEZ_PREFIX="$SRC_DIR/_chez_install"
-(
-  cd "$SRC_DIR/_chez"
-  ./configure --threads --disable-x11 --installprefix="$CHEZ_PREFIX"
-  make -j"$(sysctl -n hw.ncpu)"
-  make install
-)
-export PATH="$CHEZ_PREFIX/bin:$PATH"
-export JOLT_CHEZ_CSV="$(echo "$CHEZ_PREFIX"/lib/csv*/tarm64osx)"
 
 # headless tests against the mock shim, then the runtime library
 jolt test
