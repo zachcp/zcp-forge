@@ -17,7 +17,7 @@ source:
     rev: ${{ upbge_jolt_rev }}
 
 build:
-  number: 0
+  number: 1
   # host/integrate.sh builds only for macOS (BSD sed, build_darwin, Metal
   # fixes).
   skip:
