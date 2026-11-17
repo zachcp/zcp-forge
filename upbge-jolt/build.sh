@@ -1,10 +1,7 @@
 #!/bin/bash
-# Follows upbge-jolt's own build (docs/getting-started.md, deps.edn tasks):
-# jolt test, jolt lib, clone UPBGE + prebuilt libs, host/integrate.sh.
+# The jolt half of upbge-jolt's build (docs/getting-started.md, deps.edn
+# tasks): jolt test, jolt lib. Blender comes prebuilt from upbge-jolt-engine.
 set -euxo pipefail
-
-# Let Blender's CMake pick its own minimum macOS version.
-unset MACOSX_DEPLOYMENT_TARGET
 
 jolt --version
 
@@ -12,38 +9,14 @@ jolt --version
 jolt test
 jolt lib
 
-# UPBGE at the pinned revision, with the prebuilt platform libraries
-# (`make update` without touching the pinned code)
-mkdir -p native/upbge
-(
-  cd native/upbge
-  git init -q
-  git remote add origin https://github.com/UPBGE/upbge.git
-  git fetch --depth 1 origin "$UPBGE_REV"
-  git checkout -q FETCH_HEAD
-  python3 build_files/utils/make_update.py --no-blender
-)
-
-# Newer macOS SDKs (27) declare Metal 4 types in headers Cycles includes,
-# which Blender's -Werror turns into errors at its macOS 13 deployment target.
-for v in CFLAGS CXXFLAGS OBJCFLAGS OBJCXXFLAGS; do
-  export "$v=${!v:-} -Wno-error=unguarded-availability-new"
-done
-
-# patch UPBGE, configure and build Blender + the player into build_darwin/bin
-bash host/integrate.sh
-
-BIN="native/upbge/build_darwin/bin"
 DEST="$PREFIX/lib/upbge-jolt"
 mkdir -p "$DEST" "$PREFIX/bin"
-ditto "$BIN/Blender.app" "$DEST/Blender.app"
-ditto "$BIN/Blenderplayer.app" "$DEST/Blenderplayer.app"
 cp native/libjolt_upbge.dylib "$DEST/"
 # the jolt sources, for (load-file ...) over nREPL
 cp -R src "$DEST/src"
 
 # host/run.sh, pointed at the installed app and runtime
-cat > "$PREFIX/bin/upbge-jolt" <<'EOF'
+cat > "$PREFIX/bin/upbge-jolt" <<'SH'
 #!/bin/bash
 # upbge-jolt [editor|play|headless] [scene.blend] [blender args]
 set -euo pipefail
@@ -61,5 +34,5 @@ if [ "$MODE" = headless ]; then
   exec "$BLENDER" -b "$@"
 fi
 exec "$BLENDER" "$@"
-EOF
+SH
 chmod 0755 "$PREFIX/bin/upbge-jolt"
