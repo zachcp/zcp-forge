@@ -1,0 +1,67 @@
+context:
+  version: "0.0.20261112"
+  # upbge-jolt supplies the C shim and host hooks (host/, native/upbge_shim.h)
+  # compiled into Blender. Bump this only when those files change; jolt-side
+  # changes go in the upbge-jolt recipe and do not rebuild Blender.
+  upbge_jolt_rev: f2ad345ad5f14c054988c509e9aecd4c2e919722
+  # UPBGE master (first parent) as of that commit. integrate.sh patches this
+  # tree by exact text, so move both revisions together.
+  upbge_rev: c0b37ac95879561ffdd7a421ade075a8df56e550
+
+package:
+  name: upbge-jolt-engine
+  version: ${{ version }}
+
+source:
+  - git: https://github.com/jlt-commons/upbge-jolt.git
+    rev: ${{ upbge_jolt_rev }}
+
+build:
+  number: 0
+  # host/integrate.sh builds only for macOS (BSD sed, build_darwin, Metal
+  # fixes).
+  skip:
+    - not (osx and arm64)
+  # Blender.app is self-contained (bundled dylibs, Python, rpaths relative to
+  # the bundle), so leave its binaries and signatures as built.
+  dynamic_linking:
+    binary_relocation: false
+  prefix_detection:
+    ignore: true
+  script:
+    file: build.sh
+    env:
+      UPBGE_REV: ${{ upbge_rev }}
+
+requirements:
+  # Blender is compiled with Xcode's clang against UPBGE's 55 precompiled
+  # libraries (lib/macos_arm64, fetched by make_update.py), as the upstream
+  # build does, not with conda compilers.
+  build:
+    - cmake
+    - git
+    - git-lfs
+    - make
+    - python >=3.11
+
+tests:
+  - script:
+      - '"$PREFIX/lib/upbge-jolt/Blender.app/Contents/MacOS/Blender" --version'
+      - test -x "$PREFIX/lib/upbge-jolt/Blenderplayer.app/Contents/MacOS/Blenderplayer"
+      # the shim and startup hook are linked in
+      - nm -g "$PREFIX/lib/upbge-jolt/Blender.app/Contents/MacOS/Blender" | grep -q uj_host_start
+
+about:
+  homepage: https://github.com/jlt-commons/upbge-jolt
+  repository: https://github.com/UPBGE/upbge
+  license: GPL-2.0-or-later
+  license_file: LICENSE
+  summary: UPBGE/Blender patched and built for the upbge-jolt runtime
+  description: |
+    UPBGE built from source by upbge-jolt's host/integrate.sh: Blender.app and
+    Blenderplayer.app with the upbge-jolt C shim and startup hook compiled in.
+    The jolt runtime and launcher are in the upbge-jolt package.
+
+extra:
+  recipe-maintainers:
+    - zachcp

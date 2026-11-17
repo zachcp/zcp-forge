@@ -1,0 +1,64 @@
+context:
+  # jlt-commons/upbge-jolt has no tags; the version is the date of the pinned commit.
+  version: "0.0.20261112"
+  upbge_jolt_rev: f2ad345ad5f14c054988c509e9aecd4c2e919722
+  # The prebuilt Blender this runtime drives (see ../upbge-jolt-engine). Its
+  # shim must match the bridge in src/, so bump it with any host/ change.
+  engine_version: "0.0.20261112"
+
+package:
+  name: upbge-jolt
+  version: ${{ version }}
+
+source:
+  - git: https://github.com/jlt-commons/upbge-jolt.git
+    rev: ${{ upbge_jolt_rev }}
+
+build:
+  number: 0
+  # upbge-jolt-engine is macOS-only
+  skip:
+    - not (osx and arm64)
+  # libjolt_upbge.dylib carries jolt's runtime and boot image; leave it as built.
+  dynamic_linking:
+    binary_relocation: false
+  prefix_detection:
+    ignore: true
+  script:
+    file: build.sh
+
+requirements:
+  build:
+    # the jolt release upbge-jolt's own CI tests with; brings chezscheme,
+    # which `jolt lib` (jolt build --library) links against
+    - jolt ==0.8.25
+  run:
+    - upbge-jolt-engine ==${{ engine_version }}
+
+tests:
+  - files:
+      recipe:
+        - test_nrepl.py
+    requirements:
+      run:
+        - python >=3.11
+    script:
+      - test -f "$PREFIX/lib/upbge-jolt/libjolt_upbge.dylib"
+      - '"$PREFIX/lib/upbge-jolt/Blender.app/Contents/MacOS/Blender" --version'
+      - python test_nrepl.py
+
+about:
+  homepage: https://github.com/jlt-commons/upbge-jolt
+  repository: https://github.com/jlt-commons/upbge-jolt
+  license: GPL-2.0-or-later
+  license_file: LICENSE
+  summary: UPBGE/Blender with an embedded Jolt (Clojure) nREPL
+  description: |
+    The jlt-commons/upbge-jolt runtime (libjolt_upbge.dylib) and launcher, over
+    the patched UPBGE build in upbge-jolt-engine. `upbge-jolt [editor|play|headless]`
+    starts Blender with an nREPL server and writes its port to .nrepl-port in
+    the current directory (override with UPBGE_JOLT_PORT_FILE).
+
+extra:
+  recipe-maintainers:
+    - zachcp
