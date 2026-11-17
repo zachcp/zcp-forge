@@ -55,5 +55,6 @@ jobs:
         run: |
           # uses trusted publishers for the upload
           for file in output/**/*.conda; do
-            rattler-build upload prefix -c zcp-forge "$file"
+            # keep going: a package that already exists returns 409 Conflict
+            rattler-build upload prefix -c zcp-forge "$file" || echo "::warning::Upload failed for $file"
           done
