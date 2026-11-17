@@ -39,6 +39,12 @@ mkdir -p native/upbge
   python3 build_files/utils/make_update.py --no-blender
 )
 
+# Newer macOS SDKs (27) declare Metal 4 types in headers Cycles includes,
+# which Blender's -Werror turns into errors at its macOS 13 deployment target.
+for v in CFLAGS CXXFLAGS OBJCFLAGS OBJCXXFLAGS; do
+  export "$v=${!v:-} -Wno-error=unguarded-availability-new"
+done
+
 # patch UPBGE, configure and build Blender + the player into build_darwin/bin
 bash host/integrate.sh
 
