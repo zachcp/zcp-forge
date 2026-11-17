@@ -25,6 +25,21 @@ for v in CFLAGS CXXFLAGS OBJCFLAGS OBJCXXFLAGS; do
   export "$v=${!v:-} -Wno-error=unguarded-availability-new"
 done
 
+# Leave out Blender features upbge-jolt does not use, which are most of the
+# compile time: Cycles, USD/Hydra/MaterialX, OpenVDB, Alembic, fluid sim,
+# motion tracking, Freestyle, VR and UI translations. integrate.sh configures
+# build_darwin with only its own -D flags, so cached values set here stick.
+mkdir -p native/upbge/build_darwin
+for opt in \
+  WITH_CYCLES WITH_CYCLES_OSL WITH_CYCLES_PATH_GUIDING WITH_CYCLES_EMBREE \
+  WITH_USD WITH_HYDRA WITH_MATERIALX WITH_ALEMBIC \
+  WITH_OPENVDB WITH_NANOVDB WITH_OPENIMAGEDENOISE \
+  WITH_LIBMV WITH_MOD_FLUID WITH_MOD_OCEANSIM WITH_FREESTYLE \
+  WITH_XR_OPENXR WITH_INTERNATIONAL WITH_DRACO WITH_HARU WITH_POTRACE \
+  WITH_IO_FBX WITH_IO_SPZ WITH_OPENTIMELINEIO; do
+  echo "$opt:BOOL=OFF"
+done > native/upbge/build_darwin/CMakeCache.txt
+
 # patch UPBGE, configure and build Blender + the player into build_darwin/bin
 bash host/integrate.sh
 
