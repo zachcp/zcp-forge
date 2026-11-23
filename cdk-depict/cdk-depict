@@ -8,4 +8,4 @@ fi
 if [ "${1:-}" = "--help" ]; then
     printf '%s\n' 'Web mode: cdk-depict --serve [Spring Boot options]'
 fi
-exec "$prefix/bin/java" -Djava.awt.headless=true -cp "$prefix/share/cdk-depict/cli:$prefix/share/cdk-depict/lib/*" org.openscience.cdk.app.DepictCli "$@"
+exec "$prefix/lib/jvm/bin/java" -Djava.awt.headless=true -cp "$prefix/share/cdk-depict/cli:$prefix/share/cdk-depict/lib/*" org.openscience.cdk.app.DepictCli "$@"

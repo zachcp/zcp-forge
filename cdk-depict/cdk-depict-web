@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
 prefix=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-exec "$prefix/bin/java" -Djava.awt.headless=true -jar "$prefix/share/cdk-depict/cdkdepict.war" "$@"
+exec "$prefix/lib/jvm/bin/java" -Djava.awt.headless=true -jar "$prefix/share/cdk-depict/cdkdepict.war" "$@"
