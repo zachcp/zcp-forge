@@ -1,0 +1,96 @@
+context:
+  version: "1.17"
+  graal_version: "25.5.5.0.3"
+  graal_jdk: "25i5-25.0.5.0.3"
+
+package:
+  name: cdk-depict-native
+  version: ${{ version }}
+
+source:
+  - url: https://github.com/cdk/depict/archive/refs/tags/${{ version }}.tar.gz
+    sha256: 2ca027e7d45d093e45dd73c3db7939b14ab77f74bf7c75ef0a6e7236e944040c
+    patches:
+      - webjars.patch
+  - url: https://github.com/graalvm/graalvm-ce-builds/releases/download/graal-${{ graal_version }}/graalvm-community-jdk-${{ graal_jdk }}_linux-x64_bin.tar.gz
+    sha256: c6438dee6c3ade2220d40b7ccdcad24b512d30e233e61bb4fc70519522de34ef
+    target_directory: graalvm
+
+build:
+  number: 0
+  # The native build and AWT/font setup have been verified on Linux x86-64.
+  skip: not linux or not x86_64
+  script: |
+    set -euo pipefail
+    export JAVA_HOME="$SRC_DIR/graalvm"
+    export PATH="$JAVA_HOME/bin:$PATH"
+    export PYTHON="$BUILD_PREFIX/bin/python"
+    stage="$SRC_DIR/staging"
+    mkdir -p "$stage/bin"
+    ln -s "$JAVA_HOME/bin/java" "$stage/bin/java"
+    PREFIX="$stage" bash "$RECIPE_DIR/build.sh"
+    bash "$RECIPE_DIR/build-native.sh" "$stage" "$PREFIX/libexec/cdk-depict-native"
+    mkdir -p "$PREFIX/bin"
+    install -m 755 "$RECIPE_DIR/native-launcher" "$PREFIX/bin/cdk-depict-native"
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - sysroot_linux-64 2.28.*
+    - maven >=3.9,<4
+    - unzip
+    - patchelf
+    - python >=3.11
+    - pillow
+  host:
+    - zlib
+    - freetype
+    - fontconfig
+    - xorg-libx11
+    - xorg-libxext
+    - xorg-libxi
+    - xorg-libxrender
+    - xorg-libxtst
+  run:
+    - __glibc >=2.28
+    - zlib
+    - freetype
+    - fontconfig
+    - font-ttf-dejavu-sans-mono
+    - xorg-libx11
+    - xorg-libxext
+    - xorg-libxi
+    - xorg-libxrender
+    - xorg-libxtst
+
+tests:
+  - script: |
+      DEPICT_COMMAND=cdk-depict-native DEPICT_SKIP_WEB=1 python test_depict.py
+      if cdk-depict-native --serve > web-error.log 2>&1; then
+        echo 'Native-only installation unexpectedly started a web server' >&2
+        exit 1
+      fi
+      grep -F 'requires the cdk-depict JVM/web package' web-error.log
+    files:
+      recipe:
+        - test_depict.py
+    requirements:
+      run:
+        - python >=3.11
+        - pillow
+
+about:
+  homepage: https://github.com/cdk/depict
+  repository: https://github.com/cdk/depict
+  license: LGPL-2.1-or-later AND (GPL-2.0-only WITH Classpath-exception-2.0)
+  license_file:
+    - LICENSE
+    - graalvm/LICENSE.txt
+    - graalvm/lib/svm/LICENSE_NATIVEIMAGE.txt
+    - graalvm/THIRD_PARTY_LICENSE.txt
+    - graalvm/legal/java.desktop/*
+  summary: GraalVM native CDK Depict PNG/SVG CLI (no JVM required)
+
+extra:
+  recipe-maintainers:
+    - zachcp
