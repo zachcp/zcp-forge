@@ -1,0 +1,47 @@
+context:
+  version: "1.17"
+
+package:
+  name: cdk-depict
+  version: ${{ version }}
+
+source:
+  url: https://github.com/cdk/depict/archive/refs/tags/${{ version }}.tar.gz
+  sha256: 2ca027e7d45d093e45dd73c3db7939b14ab77f74bf7c75ef0a6e7236e944040c
+  patches:
+    - webjars.patch
+
+build:
+  number: 0
+  skip: win
+  script: bash "$RECIPE_DIR/build.sh"
+
+requirements:
+  build:
+    - openjdk 25.*
+    - maven >=3.9,<4
+    - unzip
+  run:
+    - openjdk >=17
+    - font-ttf-dejavu-sans-mono
+
+tests:
+  - script: python test_depict.py
+    files:
+      recipe:
+        - test_depict.py
+    requirements:
+      run:
+        - python >=3.11
+        - pillow
+
+about:
+  homepage: https://github.com/cdk/depict
+  repository: https://github.com/cdk/depict
+  license: LGPL-2.1-or-later
+  license_file: LICENSE
+  summary: CDK Depict web application and PNG/SVG command-line renderer
+
+extra:
+  recipe-maintainers:
+    - zachcp

@@ -48,6 +48,14 @@ jobs:
             --skip-existing=all --target-platform=${{ matrix.target }} \
             -c conda-forge -c https://prefix.dev/zcp-forge
 
+      - name: Build native CDK Depict CLI
+        if: matrix.target == 'linux-64'
+        shell: bash
+        run: |
+          rattler-build build --recipe cdk-depict/recipe-native.yaml \
+            --skip-existing=all --target-platform=${{ matrix.target }} \
+            -c conda-forge -c https://prefix.dev/zcp-forge
+
       - name: Upload all packages
         shell: bash
         # do not upload on PR

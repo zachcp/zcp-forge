@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+prefix=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if [ "${1:-}" = "--serve" ]; then
+    shift
+    if [ ! -x "$prefix/bin/cdk-depict-web" ]; then
+        printf '%s\n' 'cdk-depict: --serve requires the cdk-depict JVM/web package in the same environment' >&2
+        exit 1
+    fi
+    exec "$prefix/bin/cdk-depict-web" "$@"
+fi
+if [ "${1:-}" = "--help" ]; then
+    printf '%s\n' 'Web mode: cdk-depict-native --serve [Spring Boot options] (requires cdk-depict JVM/web package)'
+fi
+app="$prefix/libexec/cdk-depict-native"
+exec "$app/cdk-depict-native" -Djava.home="$app" "$@"
